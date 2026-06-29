@@ -1,0 +1,33 @@
+services:
+  esurfing-dialer:
+    build:
+      context: .
+    image: esurfing-dialer:fixed
+    container_name: ESurfingDialer
+    network_mode: host
+    restart: unless-stopped
+
+    environment:
+      DIALER_USER: "${DIALER_USER}"
+      DIALER_PASSWORD: "${DIALER_PASSWORD}"
+
+      STATE_DIR: "/data"
+      LOGIN_RETRY_INITIAL_SECONDS: "${LOGIN_RETRY_INITIAL_SECONDS:-5}"
+      LOGIN_RETRY_MAX_SECONDS: "${LOGIN_RETRY_MAX_SECONDS:-60}"
+      HEARTBEAT_FAILURE_THRESHOLD: "${HEARTBEAT_FAILURE_THRESHOLD:-3}"
+      PORTAL_DETECTION_THRESHOLD: "${PORTAL_DETECTION_THRESHOLD:-3}"
+      NETWORK_CHECK_INTERVAL_SECONDS: "${NETWORK_CHECK_INTERVAL_SECONDS:-5}"
+      HEALTH_AUTH_MAX_AGE_SECONDS: "${HEALTH_AUTH_MAX_AGE_SECONDS:-300}"
+      NETWORK_CHECK_URLS: "${NETWORK_CHECK_URLS:-http://www.gstatic.com/generate_204,http://connect.rom.miui.com/generate_204,http://www.msftconnecttest.com/connecttest.txt}"
+
+      DIALER_MAC_ADDRESS: "${DIALER_MAC_ADDRESS:-}"
+      DIALER_CLIENT_ID: "${DIALER_CLIENT_ID:-}"
+
+    volumes:
+      - ./data:/data
+
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"

@@ -1,0 +1,9 @@
+.git
+.gradle
+build
+data
+*.log
+*.zip
+*.tar
+*.tar.gz
+backups
