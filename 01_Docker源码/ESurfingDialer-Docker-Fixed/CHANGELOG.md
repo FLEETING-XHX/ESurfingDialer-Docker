@@ -1,5 +1,13 @@
 # Changelog
 
+## 2026-07-04 v1.21 offline rebuild
+
+- Built the amd64 offline Docker image from the current source tree instead of reusing the old `dialer.tar` image as a base.
+- Updated offline package image tag and installer defaults to `esurfing-dialer:v1.21`.
+- Added `Dockerfile.runtime` for release-image builds from the current `shadowJar` output without running Gradle inside Docker.
+- Kept `DIALER_BACKEND=auto`, so x86_64 does not force Dynarmic by default.
+- Kept runtime logs under `data/logs/` with a default 3-day retention window.
+
 ## 2026-06-28 follow-up fix
 
 - Keep heartbeats running while authenticated even when connectivity probes return temporary request errors.

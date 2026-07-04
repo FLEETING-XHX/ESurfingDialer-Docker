@@ -1,0 +1,5 @@
+services:
+  esurfing-dialer:
+    build:
+      context: .
+    image: "${DIALER_IMAGE:-esurfing-dialer:v1.21}"

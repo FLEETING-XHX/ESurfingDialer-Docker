@@ -1,16 +1,13 @@
 services:
   esurfing-dialer:
-    build:
-      context: .
-    image: esurfing-dialer:fixed
+    image: "${DIALER_IMAGE:-esurfing-dialer:v1.21}"
     container_name: ESurfingDialer
     network_mode: host
     restart: unless-stopped
+    env_file:
+      - .env
 
     environment:
-      DIALER_USER: "${DIALER_USER}"
-      DIALER_PASSWORD: "${DIALER_PASSWORD}"
-
       STATE_DIR: "/data"
       LOGIN_RETRY_INITIAL_SECONDS: "${LOGIN_RETRY_INITIAL_SECONDS:-5}"
       LOGIN_RETRY_MAX_SECONDS: "${LOGIN_RETRY_MAX_SECONDS:-60}"
@@ -18,6 +15,8 @@ services:
       PORTAL_DETECTION_THRESHOLD: "${PORTAL_DETECTION_THRESHOLD:-3}"
       NETWORK_CHECK_INTERVAL_SECONDS: "${NETWORK_CHECK_INTERVAL_SECONDS:-5}"
       HEALTH_AUTH_MAX_AGE_SECONDS: "${HEALTH_AUTH_MAX_AGE_SECONDS:-300}"
+      DIALER_BACKEND: "${DIALER_BACKEND:-auto}"
+      LOG_RETENTION_DAYS: "${LOG_RETENTION_DAYS:-3}"
       NETWORK_CHECK_URLS: "${NETWORK_CHECK_URLS:-http://www.gstatic.com/generate_204,http://connect.rom.miui.com/generate_204,http://www.msftconnecttest.com/connecttest.txt}"
 
       DIALER_MAC_ADDRESS: "${DIALER_MAC_ADDRESS:-}"
@@ -31,3 +30,10 @@ services:
       options:
         max-size: "10m"
         max-file: "3"
+
+    healthcheck:
+      test: ["CMD", "/app/healthcheck.sh"]
+      interval: 30s
+      timeout: 10s
+      start_period: 45s
+      retries: 3
