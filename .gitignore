@@ -3,6 +3,10 @@
 *.tar
 *.tar.gz
 
+# Local planning notes
+GitHub发布方案.md
+ESurfingDialer-Docker离线部署改造计划.md
+
 # Runtime state
 **/data/
 **/logs/
