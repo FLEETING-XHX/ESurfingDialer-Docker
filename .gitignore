@@ -1,0 +1,14 @@
+﻿# Release artifacts are uploaded to GitHub Releases, not committed to Git.
+*.zip
+*.tar
+*.tar.gz
+
+# Runtime state
+**/data/
+**/logs/
+
+# Build caches
+**/.gradle/
+**/build/
+!**/build/libs/
+!**/build/libs/*-all.jar
