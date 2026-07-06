@@ -1,5 +1,12 @@
 # Changelog
 
+## 2026-07-07 portal recovery hardening
+
+- Treat captive-portal detections as a recovery signal instead of immediately overriding a fresh authenticated session.
+- Added `PORTAL_AUTH_FRESH_SECONDS` and `PORTAL_REAUTH_COOLDOWN_SECONDS` to prevent login-success/reset storms after the campus network forces re-authentication.
+- Increased the default portal detection threshold and health auth window to match the observed heartbeat cadence.
+- Reset the client recovery counter after a successful heartbeat so old recoveries do not accumulate during stable operation.
+
 ## 2026-07-04 v1.21 offline rebuild
 
 - Built the amd64 offline Docker image from the current source tree instead of reusing the old `dialer.tar` image as a base.

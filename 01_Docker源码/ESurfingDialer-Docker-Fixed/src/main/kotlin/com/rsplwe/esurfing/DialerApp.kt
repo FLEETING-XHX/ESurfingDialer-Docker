@@ -79,12 +79,26 @@ object DialerApp {
                             ConnectivityStatus.IS_REDIRECTS_FOUND_IP -> {
                                 States.userIp = networkStatus.userIp!!
                                 States.acIp = networkStatus.acIp!!
+                                HealthStatus.markNetworkCheckObserved()
                                 if (HealthStatus.authenticated) {
-                                    val count = HealthStatus.consecutivePortalDetections.incrementAndGet()
-                                    HealthStatus.markError("portal detected while authenticated ($count)")
-                                    logger.warn("PORTAL_DETECTED_WHILE_AUTHENTICATED count=$count userIp=${States.userIp} acIp=${States.acIp}")
-                                    if (count >= RuntimeConfig.portalDetectionThreshold) {
-                                        States.networkStatus = networkStatus.status
+                                    val authAge = HealthStatus.secondsSinceLastAuthSuccess()
+                                    if (HealthStatus.isAuthFresh(RuntimeConfig.portalAuthFreshSeconds)) {
+                                        HealthStatus.consecutivePortalDetections.set(0)
+                                        logger.warn("PORTAL_DETECTED_IGNORED_AUTH_FRESH authAge=${authAge}s userIp=${States.userIp} acIp=${States.acIp}")
+                                    } else {
+                                        val count = HealthStatus.consecutivePortalDetections.incrementAndGet()
+                                        HealthStatus.markError("portal detected while authenticated ($count), authAge=${authAge}s")
+                                        logger.warn("PORTAL_DETECTED_WHILE_AUTHENTICATED count=$count authAge=${authAge}s userIp=${States.userIp} acIp=${States.acIp}")
+                                        if (count >= RuntimeConfig.portalDetectionThreshold) {
+                                            val cooldownAge = HealthStatus.secondsSinceLastPortalReauthRequest()
+                                            if (cooldownAge >= RuntimeConfig.portalReauthCooldownSeconds) {
+                                                HealthStatus.markPortalReauthRequested()
+                                                logger.warn("PORTAL_REAUTH_REQUESTED count=$count authAge=${authAge}s")
+                                                States.networkStatus = networkStatus.status
+                                            } else {
+                                                logger.warn("PORTAL_REAUTH_SUPPRESSED_COOLDOWN count=$count cooldownAge=${cooldownAge}s")
+                                            }
+                                        }
                                     }
                                 } else {
                                     HealthStatus.markNetworkCheckSuccess()

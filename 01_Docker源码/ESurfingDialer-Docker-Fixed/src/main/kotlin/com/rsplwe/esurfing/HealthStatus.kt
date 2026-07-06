@@ -14,6 +14,7 @@ object HealthStatus {
     @Volatile var lastNetworkCheckAt: Long = 0
     @Volatile var lastLoginSuccessAt: Long = 0
     @Volatile var lastHeartbeatSuccessAt: Long = 0
+    @Volatile var lastPortalReauthRequestAt: Long = 0
     @Volatile var lastError: String? = null
     val consecutiveHeartbeatFailures = AtomicInteger(0)
     val consecutivePortalDetections = AtomicInteger(0)
@@ -43,6 +44,7 @@ object HealthStatus {
                   "lastNetworkCheckAt": $lastNetworkCheckAt,
                   "lastLoginSuccessAt": $lastLoginSuccessAt,
                   "lastHeartbeatSuccessAt": $lastHeartbeatSuccessAt,
+                  "lastPortalReauthRequestAt": $lastPortalReauthRequestAt,
                   "consecutiveHeartbeatFailures": ${consecutiveHeartbeatFailures.get()},
                   "consecutivePortalDetections": ${consecutivePortalDetections.get()},
                   "lastError": ${if (escapedError == null) "null" else "\"$escapedError\""}
@@ -54,9 +56,13 @@ object HealthStatus {
         }
     }
 
-    fun markNetworkCheckSuccess() {
+    fun markNetworkCheckObserved() {
         networkCheckThreadAlive = true
         lastNetworkCheckAt = now()
+    }
+
+    fun markNetworkCheckSuccess() {
+        markNetworkCheckObserved()
         consecutivePortalDetections.set(0)
     }
 
@@ -76,6 +82,24 @@ object HealthStatus {
         consecutivePortalDetections.set(0)
         lastError = null
     }
+
+    fun markPortalReauthRequested() {
+        lastPortalReauthRequestAt = now()
+    }
+
+    fun secondsSinceLastPortalReauthRequest(): Long {
+        if (lastPortalReauthRequestAt <= 0) return Long.MAX_VALUE
+        return (now() - lastPortalReauthRequestAt).coerceAtLeast(0)
+    }
+
+    fun secondsSinceLastAuthSuccess(): Long {
+        val lastAuthAt = maxOf(lastLoginSuccessAt, lastHeartbeatSuccessAt)
+        if (lastAuthAt <= 0) return Long.MAX_VALUE
+        return (now() - lastAuthAt).coerceAtLeast(0)
+    }
+
+    fun isAuthFresh(maxAgeSeconds: Long): Boolean =
+        authenticated && secondsSinceLastAuthSuccess() <= maxAgeSeconds
 
     fun markError(message: String?) {
         lastError = message?.takeIf { it.isNotBlank() }

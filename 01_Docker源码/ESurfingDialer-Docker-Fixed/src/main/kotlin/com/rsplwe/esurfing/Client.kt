@@ -41,6 +41,7 @@ class Client(private val options: Options) : Runnable {
                         try {
                             heartbeat(ticket)
                             HealthStatus.markHeartbeatSuccess()
+                            recoveries = 0
                             logger.info("HEARTBEAT_SUCCESS nextRetry=${keepRetrySeconds}s")
                         } catch (e: Exception) {
                             val failures = HealthStatus.consecutiveHeartbeatFailures.incrementAndGet()

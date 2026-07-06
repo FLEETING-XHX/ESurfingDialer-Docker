@@ -4,7 +4,7 @@ set -eu
 state_dir="${STATE_DIR:-/data}"
 file="$state_dir/health.json"
 max_age="${HEALTH_MAX_AGE_SECONDS:-120}"
-auth_max_age="${HEALTH_AUTH_MAX_AGE_SECONDS:-300}"
+auth_max_age="${HEALTH_AUTH_MAX_AGE_SECONDS:-900}"
 
 [ -s "$file" ] || exit 1
 
