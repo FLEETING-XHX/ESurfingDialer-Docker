@@ -1,4 +1,4 @@
-# ESurfingDialer Docker v1.21 离线安装说明
+# ESurfingDialer Docker v1.22 离线安装说明
 
 本离线包用于 iStoreOS / OpenWrt 软路由首次校园网认证部署。默认流程不需要访问 Docker Hub、GitHub、Gradle 或 Maven。
 
@@ -25,7 +25,7 @@ sh install.sh
 amd64 软路由：
 
 ```sh
-gzip -dc images/esurfing-dialer-v1.21-amd64.tar.gz | docker load
+gzip -dc images/esurfing-dialer-v1.22-amd64.tar.gz | docker load
 cp .env.example .env
 vi .env
 docker compose up -d --no-build --pull never

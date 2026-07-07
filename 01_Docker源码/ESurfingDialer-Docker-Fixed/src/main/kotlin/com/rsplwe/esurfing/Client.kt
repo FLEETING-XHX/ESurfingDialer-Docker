@@ -276,11 +276,11 @@ class Client(private val options: Options) : Runnable {
     }
 
     private fun parseRetrySeconds(value: String?, fallback: Long): Long {
-        return value
+        val parsed = value
             ?.trim()
             ?.toLongOrNull()
-            ?.coerceIn(5, 600)
-            ?: fallback.coerceIn(5, 600)
+            ?: fallback
+        return parsed.coerceIn(5, RuntimeConfig.heartbeatIntervalMaxSeconds)
     }
 
     private fun nextLoginRetrySeconds(): Long {

@@ -1,7 +1,8 @@
-﻿# Release artifacts are uploaded to GitHub Releases, not committed to Git.
+# Release artifacts are uploaded to GitHub Releases, not committed to Git.
 *.zip
 *.tar
 *.tar.gz
+00_最终部署包/ESurfingDialer-Itsuwarii-Docker-Fixed-v*/
 
 # Local planning notes
 GitHub发布方案.md

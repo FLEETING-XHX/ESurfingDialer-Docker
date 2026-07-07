@@ -1,5 +1,10 @@
 # Changelog
 
+## 2026-07-07 v1.22 offline rebuild
+
+- Built v1.22 for the portal recovery hardening fix.
+- Added `HEARTBEAT_INTERVAL_MAX_SECONDS=240` so server-provided 480 second heartbeat intervals are capped locally.
+- Updated offline package image tag and installer defaults to `esurfing-dialer:v1.22`.
 ## 2026-07-07 portal recovery hardening
 
 - Treat captive-portal detections as a recovery signal instead of immediately overriding a fresh authenticated session.

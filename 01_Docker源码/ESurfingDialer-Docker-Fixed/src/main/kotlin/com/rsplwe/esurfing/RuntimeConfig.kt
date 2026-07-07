@@ -5,6 +5,7 @@ object RuntimeConfig {
     val loginRetryInitialSeconds: Long = envLong("LOGIN_RETRY_INITIAL_SECONDS", 5, 1, 600)
     val loginRetryMaxSeconds: Long = envLong("LOGIN_RETRY_MAX_SECONDS", 60, 5, 1800)
     val heartbeatFailureThreshold: Int = envInt("HEARTBEAT_FAILURE_THRESHOLD", 3, 1, 20)
+    val heartbeatIntervalMaxSeconds: Long = envLong("HEARTBEAT_INTERVAL_MAX_SECONDS", 240, 30, 600)
     val portalDetectionThreshold: Int = envInt("PORTAL_DETECTION_THRESHOLD", 12, 1, 120)
     val networkCheckIntervalSeconds: Long = envLong("NETWORK_CHECK_INTERVAL_SECONDS", 5, 1, 300)
     val portalAuthFreshSeconds: Long = envLong("PORTAL_AUTH_FRESH_SECONDS", 900, 30, 7200)
